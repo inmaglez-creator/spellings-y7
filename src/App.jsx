@@ -79,9 +79,17 @@ export default function SpellingsApp() {
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState("home");
   const [wordCount, setWordCount] = useState(0);
+  const [visitas, setVisitas] = useState(null);
   const bottomRef = useRef(null);
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
+
+  useEffect(() => {
+    fetch("/api/visitas")
+      .then((r) => r.json())
+      .then((d) => setVisitas(d.visitas))
+      .catch(() => {});
+  }, []);
 
   const startPractice = async (group) => {
     setActiveGroup(group);
@@ -165,7 +173,6 @@ export default function SpellingsApp() {
       <div style={{ maxWidth: 640, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 28 }}>
           <div style={{ fontSize: 48, marginBottom: 8 }}>🔤</div>
-          <a href="https://y7-hub.vercel.app/" style={{ position: "fixed", top: 12, left: 12, zIndex: 50, background: "#fff", color: "#475569", textDecoration: "none", fontWeight: 700, fontSize: 13, padding: "6px 12px", borderRadius: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.12)", border: "1px solid #e5e7eb" }}>← Hub</a>
           <h1 style={{ fontSize: 26, fontWeight: 900, color: "#3B0764", margin: 0 }}>KS3 Spellings</h1>
           <p style={{ color: "#6B7280", marginTop: 6, fontSize: 14 }}>Official KS3 word list · Varied exercises · Instant feedback</p>
           <div style={{ display: "inline-block", background: "#7C3AED", color: "#fff", borderRadius: 20, padding: "4px 14px", fontSize: 12, fontWeight: 700, marginTop: 6 }}>
@@ -198,6 +205,11 @@ export default function SpellingsApp() {
         <div style={{ background: "#FEF9C3", borderRadius: 12, padding: "12px 16px", fontSize: 13, color: "#713F12", border: "1.5px solid #FDE68A", marginTop: 8 }}>
           💡 <strong>Look, Cover, Write, Check:</strong> The most effective spelling strategy — look at the word, cover it, write it from memory, then check!
         </div>
+        {visitas !== null && (
+          <div style={{ textAlign: "center", marginTop: 24, fontSize: 12, color: "#9CA3AF" }}>
+            Visitas: {visitas}
+          </div>
+        )}
       </div>
     </div>
   );
